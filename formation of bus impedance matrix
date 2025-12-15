@@ -1,0 +1,69 @@
+clear all;
+clc;
+
+disp('..... Zbus Matrix .....')
+
+n = input('enter the total number of buses = ');
+Zbus = zeros(n,n);
+
+t = 1;
+
+while t == 1
+
+    Zbus
+
+    s = menu('specify case no.', ...
+        'new bus to ref bus', ...
+        'old bus to new bus', ...
+        'two old buses', ...
+        'old bus and ref bus', ...
+        'print', ...
+        'quit');
+
+    switch s
+
+        case 1   
+            Zb = input('enter impedance value = ');
+            Zbus = Zb;
+
+        case 2   
+            k = input('enter starting bus number = ');
+            n = input('enter new bus number = ');
+            Zb = input('enter impedance value = ');
+
+            for i = 1:n
+                if i == k
+                    Zbus(n,n) = Zbus(k,k) + Zb;
+                else
+                    Zbus(i,n) = Zbus(i,k);
+                    Zbus(n,i) = Zbus(k,i);
+                end
+            end
+
+        case 3   
+            a = input('enter first bus number = ');
+            b = input('enter second bus number = ');
+            Zb = input('enter impedance value = ');
+
+            m1 = Zb + Zbus(a,a) + Zbus(b,b) - 2*Zbus(a,b);
+            Ztemp = (1/m1) * (Zbus(:,a) - Zbus(:,b)) * ...
+                    (Zbus(a,:) - Zbus(b,:));
+            Zbus = Zbus - Ztemp;
+
+        case 4  
+            k = input('enter the old bus number = ');
+            Zb = input('enter impedance value = ');
+
+            m2 = Zbus(k,k) + Zb;
+            Ztemp = (1/m2) * Zbus(:,k) * Zbus(k,:);
+            Zbus = Zbus - Ztemp;
+
+        case 5   
+            disp('Zbus Matrix is:')
+            disp(Zbus)
+
+        case 6   
+            t = 0;
+    end
+end
+
