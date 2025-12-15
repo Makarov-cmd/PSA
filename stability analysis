@@ -1,0 +1,80 @@
+% transient small signal stability
+
+clc
+clear all
+
+E  = 1.35;
+H  = 9.94;
+V  = 1;
+X  = 0.65;
+Pm = 0.6;
+D  = 0.138;
+
+fo = 60;
+
+Pmax = E * V / X;
+
+do = asin(Pm / Pmax);
+
+Ps = Pmax * cos(do);
+
+disp('Ps=')
+disp(Ps);
+
+Wn = sqrt(3.14 * 60 / (H * Ps));
+
+disp('Wn=')
+disp(Wn);
+
+Z = (D / 2) * sqrt(3.14 * 60 / (H * Ps));
+
+disp('Z=');
+disp(Z);
+
+Wd = Wn * sqrt(1 - Z^2);
+
+disp('Wd=')
+disp(Wd);
+
+fd = Wd / (2 * 3.14);
+
+disp('fd=')
+disp(fd);
+
+tanv = 1 / (Z * Wn);
+disp('tan=')
+disp(tanv);
+
+th = acos(Z);
+disp('th=')
+disp(th);
+
+Ddo = 10 * 3.14 / 180;
+
+disp('Ddo=');
+disp(Ddo);
+
+t = 0:0.01:3;
+
+Dd = (Ddo / sqrt(1 - Z^2)) .* exp(-Z * Wn .* t) .* sin(Wd .* t + th);
+
+d = (do + Dd) * (180 / 3.14);
+
+Dw = (Wn * Ddo / sqrt(1 - Z^2)) .* exp(-Z * Wn .* t) .* sin(Wd .* t);
+
+f = fo + Dw / (2 * 3.14);
+
+subplot(2,1,1)
+plot(t, d)
+grid
+title('variation of rotor angle')
+xlabel('t sec')
+ylabel('delta degree')
+
+subplot(2,1,2)
+plot(t, f)
+grid
+xlabel('t sec')
+ylabel('frequency in hertz')
+title('variation of generator frequency')
+
